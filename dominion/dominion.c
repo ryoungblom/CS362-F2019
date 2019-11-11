@@ -1376,7 +1376,7 @@ int refactoredTribute(int i, int tributeRevealedCards[], int currentPlayer, int 
 
   for (i = 0; i <= 2; i ++) {
       if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold) { //Treasure cards
-          state->coins += 2;
+          state->coins += 1;
       }
 
       else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall) { //Victory Card Found
@@ -1406,12 +1406,14 @@ int refactoredMine(int j, int i, int choice1, int choice2, int currentPlayer, st
   }
 
   //if ( (getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2) )
-  if ( (getCost(state->hand[currentPlayer][choice1]) + 4) > getCost(choice2) )
+  if ( (getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2) )
   {
+    //printf("cost1: %d, cost2: %d\n", getCost(state->hand[currentPlayer][choice1]), getCost(choice2));
       return -1;
   }
 
-  gainCard(choice2, state, 2, currentPlayer);
+
+  //gainCard(choice2, state, 2, currentPlayer);
   gainCard(choice2, state, 2, currentPlayer+1);
 
   //discard card from hand

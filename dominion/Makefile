@@ -40,6 +40,9 @@ tests: unittest1.c unittest2.c dominion.o
 	gcc -o unittest4 dominion.c rngs.c unittest4.c $(CFLAGS)
 	echo "unittest4.c:" >> unittestresults.out
 	./unittest4 >> unittestresults.out
+	gcc -o unittest5 dominion.c rngs.c unittest5.c $(CFLAGS)
+	echo "unittest5.c:" >> unittestresults.out
+	./unittest5 >> unittestresults.out
 	gcov dominion.c -b -f >> unittestresults.out
 
 unittestresults: playdom player tests

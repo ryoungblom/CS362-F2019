@@ -64,13 +64,17 @@ int main () {
 
   refactoredBaron (1, currentPlayer, &G); //option 1:
 
-
+  if (G.numBuys == G.numBuys) {
+    printf("Buy increase error!\n");
+  }
 
   G.supplyCount[estate] = 2; //set estate supply to above 0
   refactoredBaron (0, currentPlayer, &G);
 
   G.supplyCount[estate] = 1; //set estate supply to 1 so it can be decremented
   refactoredBaron (0, currentPlayer, &G);
+
+  printf("Error! Game should have ended!\n");
 
 
 printf("\n");
