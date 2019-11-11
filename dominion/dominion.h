@@ -128,4 +128,13 @@ int getWinners(int players[MAX_PLAYERS], struct gameState *state);
 /* Set array position of each player who won (remember ties!) to
    1, others to 0 */
 
+int refactoredMine(int j, int i, int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos);
+int refactoredTribute(int i, int tributeRevealedCards[], int currentPlayer, int nextPlayer, struct gameState *state);
+int refactoredAmbassador(int j, int i, int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos);
+int refactoredMinion(int i, int j, int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos);
+int refactoredBaron (int choice1, int currentPlayer, struct gameState *state);
+
+void testOne();
+
+
 #endif

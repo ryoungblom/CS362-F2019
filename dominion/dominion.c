@@ -683,8 +683,8 @@ int getCost(int cardNumber)
 
 int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus)
 {
-    int i;
-    int j;
+    int i=0;
+    int j=0;
     int k;
     int x;
     int index;
@@ -878,7 +878,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 
 //Refactor Minion
     case minion:
-        refactoredMinion(i, choice1, choice2, currentPlayer, state, handPos);
+        refactoredMinion(i, j, choice1, choice2, currentPlayer, state, handPos);
 
 
     case steward:
@@ -1202,7 +1202,7 @@ int refactoredBaron (int choice1, int currentPlayer, struct gameState *state) {
 }
 
 
-int refactoredMinion(int i, int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos) {
+int refactoredMinion(int i, int j, int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos) {
   //+1 action
   state->numActions++;
 
@@ -1214,6 +1214,7 @@ if (choice1)
       //state->coins = state->coins + 2;
       state->coins = state->coins + 3;
   }
+
   else if (choice2)		//discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
   {
       //discard hand
@@ -1258,6 +1259,7 @@ if (choice1)
 
 
 
+//line 914
 int refactoredAmbassador(int j, int i, int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos) {
   j = 0;		//used to check if player has enough cards to discard
 
@@ -1273,11 +1275,13 @@ int refactoredAmbassador(int j, int i, int choice1, int choice2, int currentPlay
 
   for (i = 0; i < state->handCount[currentPlayer]; i++)
   {
-      if (i != handPos && i == state->hand[currentPlayer][choice1] && i != choice1)
+      /*if (i != handPos && i == state->hand[currentPlayer][choice1] && i != choice1)*/
+      if (i != handPos && state->hand[currentPlayer][i] == state->hand[currentPlayer][choice1])
       {
-          j++;
+        j++;
       }
   }
+
   if (j < choice2)
   {
       return -1;
@@ -1320,8 +1324,8 @@ int refactoredAmbassador(int j, int i, int choice1, int choice2, int currentPlay
 }
 
 
-
-int refactoredTribute(int i, int tributeRevealedCards, int currentPlayer, int nextPlayer, struct gameState *state) {
+//line 909
+int refactoredTribute(int i, int tributeRevealedCards[], int currentPlayer, int nextPlayer, struct gameState *state) {
   if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1) {
       if (state->deckCount[nextPlayer] > 0) {
           tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
@@ -1332,6 +1336,7 @@ int refactoredTribute(int i, int tributeRevealedCards, int currentPlayer, int ne
           state->discardCount[nextPlayer]--;
       }
       else {
+          printf("No cards to reveal\n");
           //No Card to Reveal
           if (DEBUG) {
               printf("No cards to reveal\n");
@@ -1339,7 +1344,8 @@ int refactoredTribute(int i, int tributeRevealedCards, int currentPlayer, int ne
       }
   }
 
-  else {
+  else { //tribute
+
       if (state->deckCount[nextPlayer] == 0) {
           for (i = 0; i < state->discardCount[nextPlayer]; i++) {
               state->deck[nextPlayer][i] = state->discard[nextPlayer][i];//Move to deck
@@ -1350,13 +1356,16 @@ int refactoredTribute(int i, int tributeRevealedCards, int currentPlayer, int ne
 
           shuffle(nextPlayer,state);//Shuffle the deck
       }
+
       tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
       state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
       //state->deckCount[nextPlayer]--;
       state->deckCount[nextPlayer]++;
-      tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
+      //state->discardCount[nextPlayer]--;
+      tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer]-2];
       state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
       state->deckCount[nextPlayer]--;
+      //state->discardCount[nextPlayer]--;
   }
 
   if (tributeRevealedCards[0] == tributeRevealedCards[1]) { //If we have a duplicate card, just drop one
@@ -1367,7 +1376,7 @@ int refactoredTribute(int i, int tributeRevealedCards, int currentPlayer, int ne
 
   for (i = 0; i <= 2; i ++) {
       if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold) { //Treasure cards
-          state->coins += 1;
+          state->coins += 2;
       }
 
       else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall) { //Victory Card Found
@@ -1423,3 +1432,7 @@ int refactoredMine(int j, int i, int choice1, int choice2, int currentPlayer, st
 }
 
 //end of dominion.c
+
+void testOne() {
+  printf ("Hello, world!");
+};
