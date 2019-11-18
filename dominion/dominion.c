@@ -168,10 +168,10 @@ int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
         state->handCount[i] = 0;
         state->discardCount[i] = 0;
         //draw 5 cards
-        // for (j = 0; j < 5; j++)
-        //	{
-        //	  drawCard(i, state);
-        //	}
+         for (j = 0; j < 5; j++)
+        	{
+        	  drawCard(i, state);
+        	}
     }
 
     //set embargo tokens to 0 for all supply piles
@@ -561,9 +561,10 @@ int getWinners(int players[MAX_PLAYERS], struct gameState *state) {
 }
 
 int drawCard(int player, struct gameState *state)
-{   int count;
+{   int count = 0;
     int deckCounter;
     if (state->deckCount[player] <= 0) { //Deck is empty
+      //printf("DECK EMPTY: %d\n", count);
 
         //Step 1 Shuffle the discard pile back into a deck
         int i;
@@ -613,6 +614,7 @@ int drawCard(int player, struct gameState *state)
         state->hand[player][count] = state->deck[player][deckCounter - 1];//Add card to the hand
         state->deckCount[player]--;
         state->handCount[player]++;//Increment hand count
+        //printf("xxCurrent hand count: %d\n", count);
     }
 
     return 0;
@@ -683,8 +685,8 @@ int getCost(int cardNumber)
 
 int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus)
 {
-    int i;
-    int j;
+    int i = 0;
+    int j = 0;
     int k;
     int x;
     int index;
@@ -878,7 +880,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 
 //Refactor Minion
     case minion:
-        refactoredMinion(i, choice1, choice2, currentPlayer, state, handPos);
+        refactoredMinion(i, j, choice1, choice2, currentPlayer, state, handPos);
 
 
     case steward:
@@ -1174,7 +1176,7 @@ int refactoredBaron (int choice1, int currentPlayer, struct gameState *state) {
                   state->supplyCount[estate]--;//Decrement estates
                   if (supplyCount(estate, state) == 0) {
                       //isGameOver(state);
-                      printf("No more estate cards left!");
+                      //printf("No more estate cards left!");
                   }
               }
               card_not_discarded = 0;//Exit the loop
@@ -1187,6 +1189,7 @@ int refactoredBaron (int choice1, int currentPlayer, struct gameState *state) {
   }
 
   else {
+
       if (supplyCount(estate, state) > 0) {
           gainCard(estate, state, 0, currentPlayer);//Gain an estate
 
@@ -1202,7 +1205,7 @@ int refactoredBaron (int choice1, int currentPlayer, struct gameState *state) {
 }
 
 
-int refactoredMinion(int i, int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos) {
+int refactoredMinion(int i, int j, int choice1, int choice2, int currentPlayer, struct gameState *state, int handPos) {
   //+1 action
   state->numActions++;
 
@@ -1226,6 +1229,7 @@ if (choice1)
       for (i = 0; i < 4; i++)
       {
           drawCard(currentPlayer, state);
+          //printf("DRAVING.... cur: %d\n", state->handCount[currentPlayer]);
       }
 
       //other players discard hand and redraw if hand size > 4
@@ -1321,7 +1325,7 @@ int refactoredAmbassador(int j, int i, int choice1, int choice2, int currentPlay
 
 
 
-int refactoredTribute(int i, int tributeRevealedCards, int currentPlayer, int nextPlayer, struct gameState *state) {
+int refactoredTribute(int i, int tributeRevealedCards[], int currentPlayer, int nextPlayer, struct gameState *state) {
   if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1) {
       if (state->deckCount[nextPlayer] > 0) {
           tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer]-1];
